@@ -1,6 +1,9 @@
 package app
 
 import (
+	"context"
+	"encoding/json"
+
 	elastic "github.com/olivere/elastic/v7"
 )
 
@@ -30,4 +33,16 @@ func Start(url, username, password string) *App {
 		password: password,
 		client:   es,
 	}
+}
+
+func (app *App) DefineIndex(ctx context.Context, indexName string, mapping *json.RawMessage) error {
+	bytes, err := json.Marshal(mapping)
+	if err != nil {
+		return err
+	}
+	_, err = app.client.CreateIndex(indexName).BodyString(string(bytes)).Do(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }
