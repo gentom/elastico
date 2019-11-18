@@ -46,3 +46,11 @@ func (app *App) DefineIndex(ctx context.Context, indexName string, mapping *json
 	}
 	return nil
 }
+
+func (app *App) DeleteIndex(ctx context.Context, indexName string) error {
+	_, err := app.client.DeleteIndex(indexName).Do(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
